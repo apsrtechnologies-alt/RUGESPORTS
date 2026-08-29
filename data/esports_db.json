@@ -1,0 +1,214 @@
+{
+  "users": [
+    {
+      "id": "usr_demo_1",
+      "username": "RAG_Demon99",
+      "email": "demon@ragesports.in",
+      "phone": "9876543210",
+      "freeFireName": "⚡DEMON・FF",
+      "freeFireUid": "1098273645",
+      "walletBalance": 176120,
+      "totalWinnings": 450,
+      "matchesPlayed": 9,
+      "totalKills": 26,
+      "createdAt": "2026-08-28T10:50:41.866Z"
+    }
+  ],
+  "tournaments": [
+    {
+      "id": "tour_1787915236147_ztvu",
+      "title": "Free Fire Bermuda Cash Clash",
+      "gameMode": "Solo",
+      "map": "Bermuda",
+      "matchType": "Battle Royale",
+      "entryFee": 10000,
+      "prizePool": 20000,
+      "perKill": 0,
+      "firstPrize": 18000,
+      "secondPrize": 0,
+      "thirdPrize": 0,
+      "matchTime": "2026-08-28T08:36:00.000Z",
+      "totalSlots": 4,
+      "joinedCount": 1,
+      "status": "ongoing",
+      "customRoomId": "90022",
+      "customRoomPassword": "RANDIBAAZ12",
+      "rules": [
+        "Emulators strictly banned.",
+        "Room credentials given 15 min before match.",
+        "Join allotted slot only.",
+        "Take Booyah screenshot."
+      ],
+      "tags": [
+        "Free Fire",
+        "Official"
+      ],
+      "bannerUrl": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
+      "customRoomDetailsTime": "2026-08-28T11:22:37.561Z"
+    }
+  ],
+  "participants": [
+    {
+      "id": "part_1787916089871_to21",
+      "tournamentId": "tour_1787915236147_ztvu",
+      "userId": "usr_demo_1",
+      "username": "RAG_Demon99",
+      "freeFireName": "⚡DEMON・FF",
+      "freeFireUid": "1098273645",
+      "slotNumber": 1,
+      "teammates": [],
+      "joinedAt": "2026-08-28T11:21:29.871Z",
+      "paymentStatus": "paid"
+    }
+  ],
+  "deposits": [
+    {
+      "id": "dep_1787915446635_jhfz",
+      "userId": "usr_demo_1",
+      "username": "RAG_Demon99",
+      "userPhone": "9876543210",
+      "userFreeFireName": "⚡DEMON・FF",
+      "amount": 50,
+      "paymentMethod": "UPI",
+      "transactionId": "12345678987654",
+      "screenshotUrl": "",
+      "status": "pending",
+      "createdAt": "2026-08-28T11:10:46.635Z"
+    }
+  ],
+  "withdrawals": [
+    {
+      "id": "with_1787915787587_w6ks",
+      "userId": "usr_demo_1",
+      "username": "RAG_Demon99",
+      "userFreeFireName": "⚡DEMON・FF",
+      "amount": 20000,
+      "payoutMethod": "UPI",
+      "payoutDetails": {
+        "upiId": "Randi@upi",
+        "accountNumber": "",
+        "ifsc": "",
+        "accountHolderName": "",
+        "paytmNumber": ""
+      },
+      "status": "pending",
+      "createdAt": "2026-08-28T11:16:27.587Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx_1787916089871",
+      "userId": "usr_demo_1",
+      "type": "entry_fee",
+      "amount": 10000,
+      "description": "Entry fee for Free Fire Bermuda Cash Clash (Slot #1)",
+      "status": "completed",
+      "createdAt": "2026-08-28T11:21:29.871Z",
+      "referenceId": "tour_1787915236147_ztvu"
+    },
+    {
+      "id": "tx_1787915787587",
+      "userId": "usr_demo_1",
+      "type": "withdrawal",
+      "amount": 20000,
+      "description": "Withdrawal Request to UPI (Randi@upi) - Processing",
+      "status": "pending",
+      "createdAt": "2026-08-28T11:16:27.587Z",
+      "referenceId": "with_1787915787587_w6ks"
+    },
+    {
+      "id": "tx_1787915722018",
+      "userId": "usr_demo_1",
+      "type": "admin_adjustment",
+      "amount": 200000,
+      "description": "Admin Balance Credit: Manual bonus / dispute fix",
+      "status": "completed",
+      "createdAt": "2026-08-28T11:15:22.018Z"
+    },
+    {
+      "id": "tx_1787915553052",
+      "userId": "usr_demo_1",
+      "type": "admin_adjustment",
+      "amount": 2000,
+      "description": "Admin Balance Credit: Manual bonus / dispute fix",
+      "status": "completed",
+      "createdAt": "2026-08-28T11:12:33.052Z"
+    },
+    {
+      "id": "tx_1787915552245",
+      "userId": "usr_demo_1",
+      "type": "admin_adjustment",
+      "amount": 2000,
+      "description": "Admin Balance Credit: Manual bonus / dispute fix",
+      "status": "completed",
+      "createdAt": "2026-08-28T11:12:32.245Z"
+    },
+    {
+      "id": "tx_1787915551827",
+      "userId": "usr_demo_1",
+      "type": "admin_adjustment",
+      "amount": 2000,
+      "description": "Admin Balance Credit: Manual bonus / dispute fix",
+      "status": "completed",
+      "createdAt": "2026-08-28T11:12:31.827Z"
+    },
+    {
+      "id": "tx_1787915446635",
+      "userId": "usr_demo_1",
+      "type": "deposit",
+      "amount": 50,
+      "description": "Deposit Request (UTR: 12345678987654) - Verifying with Bank",
+      "status": "pending",
+      "createdAt": "2026-08-28T11:10:46.635Z",
+      "referenceId": "dep_1787915446635_jhfz"
+    }
+  ],
+  "settings": {
+    "upiId": "ragesports@okaxis",
+    "upiName": "RAG ESPORTS ARENA",
+    "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=upi://pay?pa=ragesports@okaxis%26pn=RAG%20ESPORTS%26cu=INR",
+    "bankName": "State Bank of India",
+    "accountNumber": "91880012345678",
+    "ifsc": "SBIN0004521",
+    "accountHolder": "RUG Esports Official",
+    "minDeposit": 10,
+    "minWithdrawal": 50,
+    "supportWhatsapp": "+91 98765 43210",
+    "supportTelegram": "https://t.me/rug_esports_official",
+    "announcementText": "🔥 Welcome to RUG | ESPORTS! Join daily Free Fire cash tournaments. Fair play & fast manual payouts!",
+    "announcementActive": true,
+    "adminSecretPin": "7788"
+  },
+  "banners": [
+    {
+      "id": "banner_1",
+      "title": "BE THE LAST ONE STANDING",
+      "subtitle": "COMPETE. SURVIVE. WIN.",
+      "badge": "DAILY CASH CUPS",
+      "imageUrl": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80",
+      "linkTab": "tournaments",
+      "active": true,
+      "order": 1
+    },
+    {
+      "id": "banner_2",
+      "title": "FREE FIRE GRAND CLASH",
+      "subtitle": "BERMUDA & PURGATORY",
+      "badge": "WEEKLY ₹50,000 PRIZE",
+      "imageUrl": "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80",
+      "linkTab": "tournaments",
+      "active": true,
+      "order": 2
+    },
+    {
+      "id": "banner_3",
+      "title": "FAST UPI DEPOSITS & WITHDRAWALS",
+      "subtitle": "INSTANT DISBURSEMENT",
+      "badge": "100% SECURE & VERIFIED",
+      "imageUrl": "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1200&q=80",
+      "linkTab": "wallet",
+      "active": true,
+      "order": 3
+    }
+  ]
+}
