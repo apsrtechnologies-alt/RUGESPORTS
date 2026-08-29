@@ -1,0 +1,6 @@
+{
+  "name": "RUG | ESPORTS",
+  "description": "Official RUG | ESPORTS Free Fire Tournament Platform. Join daily custom room matches, compete with top players, and win real cash rewards with instant manual verification and withdrawals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
