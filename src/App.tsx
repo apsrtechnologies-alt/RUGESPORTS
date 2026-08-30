@@ -150,7 +150,12 @@ function MainAppContent() {
               <LandingHomeView
                 tournaments={tournaments}
                 publicSettings={publicSettings}
-                onExploreMatches={() => setSelectedModeFilter('All')}
+                onExploreMatches={() => {
+                  const el = document.getElementById('featured-tournaments-section');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
                 onSelectTournament={handleSelectTournament}
               />
             ) : (
@@ -223,7 +228,7 @@ function MainAppContent() {
         {/* ======================================================== */}
         {/* VIEW 2: JOINED MATCHES & ROOM CREDENTIALS */}
         {/* ======================================================== */}
-        {activeNavTab === 'joined' && (
+        {activeNavTab === 'my_matches' && (
           <JoinedMatchesView
             onSelectTournament={handleSelectTournament}
             onExploreMatches={() => setActiveNavTab('tournaments')}
@@ -255,7 +260,15 @@ function MainAppContent() {
       {/* Persistent Bottom Mobile Navigation Bar */}
       <BottomNav
         activeTab={activeNavTab}
-        onChangeTab={(tab) => setActiveNavTab(tab)}
+        onTabChange={(tab) => {
+          setActiveNavTab(tab);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        onChangeTab={(tab) => {
+          setActiveNavTab(tab);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        joinedCount={joinedTournamentIds.length}
       />
 
       {/* Tournament Detail & Room Credential Modal */}
