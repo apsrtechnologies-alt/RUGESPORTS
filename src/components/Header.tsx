@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Wallet, Bell, Plus, Volume2 } from 'lucide-react';
 import { PaymentSettings } from '../types';
@@ -8,7 +8,7 @@ interface HeaderProps {
   onOpenAddMoney: () => void;
   onOpenNotifications?: () => void;
   publicSettings?: Omit<PaymentSettings, 'adminSecretPin'> | null;
-  onTriggerAdminPrompt: () => void;
+  onTriggerAdminPrompt?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,27 +16,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAddMoney,
   onOpenNotifications,
   publicSettings,
-  onTriggerAdminPrompt,
 }) => {
   const { user, openAuthModal } = useAuth();
-  const [logoClickCount, setLogoClickCount] = useState(0);
-  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Secret admin unlock gesture: 3 rapid clicks within 1.2 seconds
-  const handleSecretLogoClick = () => {
-    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-
-    const nextCount = logoClickCount + 1;
-    if (nextCount >= 3) {
-      setLogoClickCount(0);
-      onTriggerAdminPrompt();
-    } else {
-      setLogoClickCount(nextCount);
-      clickTimerRef.current = setTimeout(() => {
-        setLogoClickCount(0);
-      }, 1200);
-    }
-  };
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-100 shadow-sm">
@@ -52,12 +33,10 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Main Header Row */}
       <div className="max-w-md mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
-        {/* RUG ESPORTS Brand Logo (Freely displayed image, Secret Admin Trigger on 3 taps) */}
+        {/* RUG ESPORTS Brand Logo */}
         <div 
-          id="brand-logo-trigger"
-          onClick={handleSecretLogoClick}
-          className="flex items-center cursor-pointer select-none group active:scale-95 transition"
-          title="RUG ESPORTS (Admin: 3 taps)"
+          id="brand-logo"
+          className="flex items-center select-none"
         >
           <img 
             src="https://krorent.in/wp-content/uploads/2026/08/RUGESPORTS.jpeg" 
