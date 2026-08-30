@@ -105,9 +105,15 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
   }, [activeBanners.length]);
 
   const upcomingTournaments = tournaments.filter(t => t.status === 'upcoming');
-  const filteredMatches = selectedCategory === 'All'
-    ? upcomingTournaments
-    : upcomingTournaments.filter(t => t.gameMode.toLowerCase().includes(selectedCategory.toLowerCase()) || t.matchType.toLowerCase().includes(selectedCategory.toLowerCase()));
+
+  const scrollToFeaturedSection = () => {
+    const el = document.getElementById('featured-tournaments-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      onExploreMatches();
+    }
+  };
 
   const handleHeroGoogleClick = () => {
     setIsGoogleSigningIn(true);
@@ -225,8 +231,9 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
           {activeBanners.length > 1 && (
             <div className="absolute top-3 right-3 z-30 flex items-center gap-1.5 bg-slate-950/70 backdrop-blur-md px-2 py-1 rounded-full border border-slate-800">
               <button
+                type="button"
                 onClick={() => setActiveBannerIndex((prev) => (prev - 1 + activeBanners.length) % activeBanners.length)}
-                className="text-slate-400 hover:text-white transition p-0.5"
+                className="text-slate-400 hover:text-white transition p-0.5 cursor-pointer"
                 title="Previous Slide"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
@@ -235,16 +242,18 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
                 {activeBanners.map((_, i) => (
                   <button
                     key={i}
+                    type="button"
                     onClick={() => setActiveBannerIndex(i)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                       i === activeBannerIndex ? 'w-4 bg-amber-400' : 'w-1.5 bg-slate-600'
                     }`}
                   />
                 ))}
               </div>
               <button
+                type="button"
                 onClick={() => setActiveBannerIndex((prev) => (prev + 1) % activeBanners.length)}
-                className="text-slate-400 hover:text-white transition p-0.5"
+                className="text-slate-400 hover:text-white transition p-0.5 cursor-pointer"
                 title="Next Slide"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -255,8 +264,10 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
 
         {/* Action button beneath banner */}
         <button
-          onClick={onExploreMatches}
-          className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-500 text-slate-950 font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-[0.99] transition"
+          type="button"
+          id="btn-view-live-tournaments-hero"
+          onClick={scrollToFeaturedSection}
+          className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-500 hover:from-amber-500 hover:to-orange-600 text-slate-950 font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer select-none"
         >
           <Flame className="w-4 h-4 fill-slate-950" />
           <span>View Live Tournaments ({tournaments.length})</span>
@@ -303,8 +314,9 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
             Browse games
           </h2>
           <button
-            onClick={onExploreMatches}
-            className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition"
+            type="button"
+            onClick={scrollToFeaturedSection}
+            className="text-xs font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition cursor-pointer select-none"
           >
             <span>View all</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -318,12 +330,12 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
               key={game.id}
               onClick={() => {
                 if (game.status === 'LIVE') {
-                  onExploreMatches();
+                  scrollToFeaturedSection();
                 }
               }}
-              className={`w-36 shrink-0 bg-slate-900 rounded-2xl border overflow-hidden p-2 space-y-2 shadow-md snap-start transition ${
+              className={`w-36 shrink-0 bg-slate-900 rounded-2xl border overflow-hidden p-2 space-y-2 shadow-md snap-start transition select-none ${
                 game.status === 'LIVE'
-                  ? 'border-emerald-500/50 hover:border-emerald-400 cursor-pointer'
+                  ? 'border-emerald-500/50 hover:border-emerald-400 cursor-pointer active:scale-95'
                   : 'border-slate-800 opacity-85 cursor-default'
               }`}
             >
@@ -434,8 +446,8 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
             {featuredLargePrizes.map((item) => (
               <div
                 key={item.id}
-                onClick={onExploreMatches}
-                className="w-72 shrink-0 bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-lg snap-start hover:border-slate-700 transition cursor-pointer flex flex-col justify-between"
+                onClick={scrollToFeaturedSection}
+                className="w-72 shrink-0 bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-lg snap-start hover:border-slate-700 transition cursor-pointer active:scale-[0.99] flex flex-col justify-between"
               >
                 {/* Wide Banner Image */}
                 <div className="relative aspect-16/9 bg-slate-950 overflow-hidden">
@@ -483,7 +495,7 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
       {/* ========================================================================= */}
       {/* 7. LIVE & UPCOMING FEATURED TOURNAMENTS */}
       {/* ========================================================================= */}
-      <section className="space-y-3 pt-1">
+      <section id="featured-tournaments-section" className="space-y-3 pt-1 scroll-mt-16">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-amber-400" />
@@ -492,25 +504,27 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
             </h3>
           </div>
           <button
-            onClick={onExploreMatches}
-            className="text-xs text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition"
+            type="button"
+            onClick={scrollToFeaturedSection}
+            className="text-xs text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition cursor-pointer select-none"
           >
-            <span>See All</span>
+            <span>See All ({upcomingTournaments.length})</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {upcomingTournaments.length > 0 ? (
           <div className="space-y-3">
-            {upcomingTournaments.slice(0, 3).map((t) => {
+            {upcomingTournaments.map((t) => {
               const joinedCount = t.joinedCount || 0;
               const isFull = joinedCount >= t.totalSlots;
 
               return (
                 <div
                   key={t.id}
+                  id={`tournament-item-${t.id}`}
                   onClick={() => onSelectTournament(t)}
-                  className="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-400/50 transition cursor-pointer space-y-3 shadow-md group"
+                  className="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-400/60 transition cursor-pointer space-y-3 shadow-md group active:scale-[0.99] select-none"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -559,6 +573,18 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
                       </span>
                     </div>
                   </div>
+
+                  {/* Quick Join CTA button inside tournament card */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectTournament(t);
+                    }}
+                    className="w-full py-2 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl transition shadow-xs active:scale-95 cursor-pointer"
+                  >
+                    View Details & Join Match
+                  </button>
                 </div>
               );
             })}
@@ -592,9 +618,10 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
 
         <div className="pt-1 space-y-2">
           <button
+            type="button"
             onClick={handleHeroGoogleClick}
             disabled={isGoogleSigningIn}
-            className="w-full py-3 px-4 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-2xl text-xs sm:text-sm transition flex items-center justify-center gap-2.5 shadow-md active:scale-98"
+            className="w-full py-3 px-4 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-2xl text-xs sm:text-sm transition flex items-center justify-center gap-2.5 shadow-md active:scale-98 cursor-pointer"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -606,8 +633,9 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
           </button>
 
           <button
+            type="button"
             onClick={() => openAuthModal('register')}
-            className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-2xl text-xs transition border border-slate-700"
+            className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-2xl text-xs transition border border-slate-700 cursor-pointer"
           >
             Register with Phone / Username
           </button>
@@ -705,8 +733,9 @@ export const LandingHomeView: React.FC<LandingHomeViewProps> = ({
                 className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden transition"
               >
                 <button
+                  type="button"
                   onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                  className="w-full p-3.5 text-left font-bold text-xs text-white flex items-center justify-between gap-3 hover:text-amber-400 transition"
+                  className="w-full p-3.5 text-left font-bold text-xs text-white flex items-center justify-between gap-3 hover:text-amber-400 transition cursor-pointer"
                 >
                   <span>{faq.q}</span>
                   <ChevronRight
