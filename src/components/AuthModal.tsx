@@ -127,7 +127,6 @@ export const AuthModal: React.FC = () => {
     e.preventDefault();
     if (!username.trim() || !phone.trim() || !freeFireName.trim() || !freeFireUid.trim()) {
       setError('Please fill in all required fields (Username, Phone, FF Name, FF UID).');
-      return;
     }
     setError(null);
     setIsSubmitting(true);
@@ -195,8 +194,13 @@ export const AuthModal: React.FC = () => {
 
         {/* Brand Banner */}
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-md shadow-orange-500/20 text-white shrink-0">
-            <Gamepad2 className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-md shadow-orange-500/20 bg-slate-950 flex items-center justify-center shrink-0 border border-slate-200">
+            <img 
+              src="https://krorent.in/wp-content/uploads/2026/08/RUGESPORTS.jpeg" 
+              alt="RUG ESPORTS" 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
             <h3 className="font-bold text-xl text-slate-900 tracking-wide font-['Rajdhani'] leading-tight">
@@ -226,11 +230,8 @@ export const AuthModal: React.FC = () => {
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
                 </svg>
               )}
-              <span>{isGoogleLoading ? 'Connecting Google Account...' : 'Continue with Google Account'}</span>
+              <span>{isGoogleLoading ? 'Connecting Google Account...' : 'Continue with Google'}</span>
             </button>
-
-            {/* Rendered Google GSI button slot if loaded */}
-            <div ref={googleBtnContainerRef} className="flex justify-center empty:hidden" />
 
             <div className="relative flex py-2 items-center">
               <div className="flex-grow border-t border-slate-200"></div>
@@ -366,31 +367,6 @@ export const AuthModal: React.FC = () => {
               {isSubmitting ? 'Logging in...' : 'Sign In to Arena'}
               <ArrowRight className="w-4 h-4" />
             </button>
-
-            {/* Quick Demo Test Logins */}
-            <div className="pt-2 border-t border-slate-100">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block mb-2">
-                ⚡ Quick Demo Accounts (1-Click Test)
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemoLogin('9876543210')}
-                  className="p-2 bg-slate-50 hover:bg-orange-50 hover:text-orange-700 border border-slate-200 rounded-xl text-left text-xs transition"
-                >
-                  <div className="font-bold text-slate-800">PhoenixFF</div>
-                  <div className="text-[10px] text-slate-500">₹450 Wallet</div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemoLogin('9811223344')}
-                  className="p-2 bg-slate-50 hover:bg-orange-50 hover:text-orange-700 border border-slate-200 rounded-xl text-left text-xs transition"
-                >
-                  <div className="font-bold text-slate-800">ShadowNinja</div>
-                  <div className="text-[10px] text-slate-500">₹820 Wallet</div>
-                </button>
-              </div>
-            </div>
           </form>
         ) : (
           <form onSubmit={handleRegisterSubmit} className="space-y-3">
