@@ -23,7 +23,6 @@ function MainAppContent() {
   
   // Navigation & State
   const [activeNavTab, setActiveNavTab] = useState<NavTab>('tournaments');
-  const [unregisteredView, setUnregisteredView] = useState<'home' | 'matches'>('home');
   const [walletInitialTab, setWalletInitialTab] = useState<'balance' | 'deposit' | 'withdraw'>('balance');
   
   // Admin State (Completely hidden from ordinary UI, unlocked via secret PIN)
@@ -72,9 +71,16 @@ function MainAppContent() {
   useEffect(() => {
     loadPublicData();
 
-    // Check if admin param is in URL query (?admin=portal or ?admin=true)
+    // Check if admin is in URL pathname (/admin) or query (?admin, ?admin=portal, ?admin=true)
+    const pathname = window.location.pathname.toLowerCase();
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('admin') === 'portal' || urlParams.get('admin') === 'true') {
+    if (
+      pathname === '/admin' || 
+      pathname.startsWith('/admin/') || 
+      urlParams.get('admin') === 'portal' || 
+      urlParams.get('admin') === 'true' ||
+      urlParams.has('admin')
+    ) {
       setShowAdminUnlockModal(true);
     }
   }, [user]);
@@ -124,7 +130,7 @@ function MainAppContent() {
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-['Inter',sans-serif]">
-      {/* Top Header with secret admin logo trigger */}
+      {/* Top Header */}
       <Header
         publicSettings={publicSettings}
         onOpenWallet={() => handleWalletOpen('balance')}
@@ -140,214 +146,143 @@ function MainAppContent() {
         {/* ======================================================== */}
         {activeNavTab === 'tournaments' && (
           <div className="space-y-3.5 animate-fadeIn">
-            {/* If user is unregistered, provide a slick toggle between Official Site Home and Match List */}
-            {!user && (
-              <div className="flex items-center justify-between p-1 bg-white rounded-2xl border border-slate-200 shadow-2xs">
-                <button
-                  id="tab-unregistered-home"
-                  onClick={() => setUnregisteredView('home')}
-                  className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
-                    unregisteredView === 'home'
-                      ? 'bg-slate-900 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  <Globe className="w-3.5 h-3.5 text-amber-400" />
-                  <span>About rugesports.in</span>
-                </button>
-                <button
-                  id="tab-unregistered-matches"
-                  onClick={() => setUnregisteredView('matches')}
-                  className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
-                    unregisteredView === 'matches'
-                      ? 'bg-orange-500 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  <Flame className="w-3.5 h-3.5 fill-current" />
-                  <span>Live Matches ({tournaments.length})</span>
-                </button>
-              </div>
-            )}
-
-            {!user && unregisteredView === 'home' ? (
+            {!user ? (
               <LandingHomeView
                 tournaments={tournaments}
                 publicSettings={publicSettings}
-                onExploreMatches={() => setUnregisteredView('matches')}
+                onExploreMatches={() => setSelectedModeFilter('All')}
                 onSelectTournament={handleSelectTournament}
               />
             ) : (
               <>
-                {/* Top Carousel Banner Slider (Admin Managed Multi-image carousel) */}
-                {banners.length > 0 ? (
-                  <BannerSlider banners={banners} onBannerClick={handleBannerClick} />
-                ) : (
-                  /* Fallback Esports Hero Promotion Banner if no custom banners are set */
-                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-4 text-white shadow-md shadow-orange-500/15">
-                    <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/15 rounded-full blur-xl pointer-events-none" />
-                    <div className="relative z-10 space-y-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="bg-white/20 backdrop-blur-xs text-white font-extrabold text-[9px] uppercase px-2.5 py-0.5 rounded-full tracking-wider">
-                          FREE FIRE ARENA
-                        </span>
-                        <span className="flex items-center gap-0.5 text-[10px] font-bold text-amber-100 bg-black/20 px-2 py-0.5 rounded-full">
-                          <Zap className="w-3 h-3 fill-amber-300 text-amber-300" /> Instant Wallet Payouts
-                        </span>
-                      </div>
-                      <h2 className="text-xl font-black font-['Rajdhani'] leading-tight text-white tracking-wide">
-                        WIN REAL CASH ON EVERY BOOYAH & KILL!
-                      </h2>
-                      <p className="text-xs font-medium text-white/90 leading-snug">
-                        Join Free Fire custom matches, play fair, and withdraw instant winnings via UPI & Bank.
-                      </p>
-                    </div>
-                  </div>
-                )}
+                {/* Visual Banner Carousel */}
+                <BannerSlider banners={banners} onBannerClick={handleBannerClick} />
 
-                {/* Mode Filter Chips */}
-                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-                  {['All', 'Solo', 'Duo', 'Squad', '1v1 Custom', '2v2 Custom', 'Clash Squad (4v4)'].map((mode) => (
+                {/* Filter Pills */}
+                <div className="flex items-center justify-between gap-2 overflow-x-auto py-1 no-scrollbar">
+                  {['All', 'Squad', 'Clash Squad (4v4)', 'Solo', 'Duo'].map((mode) => (
                     <button
                       key={mode}
-                      id={`filter-mode-${mode.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
                       onClick={() => setSelectedModeFilter(mode)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border ${
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition shadow-xs ${
                         selectedModeFilter === mode
-                          ? 'bg-orange-600 text-white border-orange-600 shadow-sm shadow-orange-600/30'
-                          : 'bg-white text-slate-600 border-slate-200 hover:text-slate-900 hover:border-slate-300'
+                          ? 'bg-orange-500 text-white shadow-orange-500/20'
+                          : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
                       }`}
                     >
-                      {mode === 'All' ? 'All Matches' : mode}
+                      {mode}
                     </button>
                   ))}
                 </div>
 
-                {/* Matches Header & Counter */}
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-2">
-                    <Flame className="w-4 h-4 text-orange-600" />
-                    <h3 className="font-bold text-xs text-slate-800 uppercase tracking-wider">
-                      Available Matches ({filteredTournaments.length})
-                    </h3>
-                  </div>
-                  <button
-                    onClick={loadPublicData}
-                    className="p-1.5 text-slate-500 hover:text-orange-600 bg-white border border-slate-200 rounded-xl transition shadow-2xs"
-                    title="Refresh Tournaments"
-                  >
-                    <RefreshCw className={`w-3.5 h-3.5 ${loadingTournaments ? 'animate-spin' : ''}`} />
-                  </button>
-                </div>
-
                 {/* Tournament List */}
-                {loadingTournaments ? (
-                  <div className="space-y-3 py-12 text-center">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-xs text-slate-500">Loading Free Fire matches...</p>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center gap-1.5">
+                      <Flame className="w-4 h-4 text-orange-500" />
+                      <h2 className="font-bold text-sm text-slate-900 font-['Rajdhani'] uppercase tracking-wider">
+                        Available Tournaments ({filteredTournaments.length})
+                      </h2>
+                    </div>
+                    <button
+                      onClick={loadPublicData}
+                      className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+                      title="Refresh"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${loadingTournaments ? 'animate-spin' : ''}`} />
+                    </button>
                   </div>
-                ) : filteredTournaments.length === 0 ? (
-                  <div className="p-8 text-center bg-white rounded-3xl border border-slate-200 shadow-xs space-y-3">
-                    <Trophy className="w-10 h-10 text-slate-300 mx-auto" />
-                    <p className="text-sm font-bold text-slate-800">No matches found</p>
-                    <p className="text-xs text-slate-500">
-                      Matches will be created by the admin shortly. Check back in a few minutes!
-                    </p>
-                    {selectedModeFilter !== 'All' && (
-                      <button
-                        onClick={() => setSelectedModeFilter('All')}
-                        className="py-1.5 px-3 bg-orange-50 text-orange-700 border border-orange-200 rounded-xl text-xs font-bold"
-                      >
-                        Show All Matches
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {filteredTournaments.map((tournament) => (
+
+                  {loadingTournaments ? (
+                    <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 space-y-2">
+                      <RefreshCw className="w-6 h-6 text-orange-500 animate-spin mx-auto" />
+                      <p className="text-xs font-bold text-slate-600">Loading Active Tournaments...</p>
+                    </div>
+                  ) : filteredTournaments.length === 0 ? (
+                    <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 space-y-2">
+                      <Trophy className="w-8 h-8 text-slate-300 mx-auto" />
+                      <h3 className="font-bold text-sm text-slate-800">No Matches Found</h3>
+                      <p className="text-xs text-slate-500">Check back soon for new tournaments!</p>
+                    </div>
+                  ) : (
+                    filteredTournaments.map((tournament) => (
                       <TournamentCard
                         key={tournament.id}
                         tournament={tournament}
                         isJoined={joinedTournamentIds.includes(tournament.id)}
-                        onJoinClick={handleSelectTournament}
-                        onViewDetails={handleSelectTournament}
+                        onSelect={() => handleSelectTournament(tournament)}
                       />
-                    ))}
-                  </div>
-                )}
+                    ))
+                  )}
+                </div>
               </>
             )}
           </div>
         )}
 
         {/* ======================================================== */}
-        {/* VIEW 2: MY MATCHES & ROOM CREDENTIALS */}
+        {/* VIEW 2: JOINED MATCHES & ROOM CREDENTIALS */}
         {/* ======================================================== */}
-        {activeNavTab === 'my_matches' && (
+        {activeNavTab === 'joined' && (
           <JoinedMatchesView
-            onBrowseMatches={() => setActiveNavTab('tournaments')}
-            onViewTournamentDetails={handleSelectTournament}
+            onSelectTournament={handleSelectTournament}
+            onExploreMatches={() => setActiveNavTab('tournaments')}
           />
         )}
 
         {/* ======================================================== */}
-        {/* VIEW 3: WALLET, DEPOSIT (MANUAL QR) & WITHDRAWAL */}
+        {/* VIEW 3: WALLET & INSTANT UPI TRANSACTIONS */}
         {/* ======================================================== */}
         {activeNavTab === 'wallet' && (
           <WalletView
             publicSettings={publicSettings}
             initialTab={walletInitialTab}
+            onRefreshData={loadPublicData}
           />
         )}
 
         {/* ======================================================== */}
-        {/* VIEW 4: PLAYER PROFILE & STATS */}
+        {/* VIEW 4: PLAYER PROFILE */}
         {/* ======================================================== */}
         {activeNavTab === 'profile' && (
           <ProfileView
-            publicSettings={publicSettings}
             onOpenWallet={() => handleWalletOpen('balance')}
+            onOpenAdmin={() => setShowAdminUnlockModal(true)}
           />
         )}
       </main>
 
-      {/* Bottom Sticky Navigation */}
+      {/* Persistent Bottom Mobile Navigation Bar */}
       <BottomNav
         activeTab={activeNavTab}
-        onTabChange={(tab) => {
-          setActiveNavTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        joinedCount={joinedTournamentIds.length}
+        onChangeTab={(tab) => setActiveNavTab(tab)}
       />
 
-      {/* Global Auth Modal (Login / Register) */}
+      {/* Tournament Detail & Room Credential Modal */}
+      <TournamentDetailModal
+        tournament={selectedTournament}
+        isOpen={!!selectedTournament}
+        onClose={() => setSelectedTournament(null)}
+        onJoinedSuccess={() => {
+          loadPublicData();
+        }}
+        onOpenDeposit={() => {
+          setSelectedTournament(null);
+          handleWalletOpen('deposit');
+        }}
+      />
+
+      {/* Player Authentication Modal */}
       <AuthModal />
 
-      {/* Tournament Details / Join Custom Room Modal */}
-      {selectedTournament && (
-        <TournamentDetailModal
-          tournament={selectedTournament}
-          isOpen={!!selectedTournament}
-          onClose={() => setSelectedTournament(null)}
-          onJoinedSuccess={() => {
-            loadPublicData();
-            setActiveNavTab('my_matches');
-          }}
-          onOpenDeposit={() => {
-            setSelectedTournament(null);
-            handleWalletOpen('deposit');
-          }}
-        />
-      )}
-
-      {/* Secret Admin PIN Prompt Modal */}
+      {/* Admin Secret PIN Verification Modal */}
       <AdminUnlockModal
         isOpen={showAdminUnlockModal}
         onClose={() => setShowAdminUnlockModal(false)}
         onSuccess={(pin) => {
           setAdminPin(pin);
           setIsAdminMode(true);
+          setShowAdminUnlockModal(false);
         }}
       />
     </div>
