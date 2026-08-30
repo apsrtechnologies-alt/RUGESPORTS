@@ -53,12 +53,17 @@ export const AdminUnlockModal: React.FC<AdminUnlockModalProps> = ({
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600">
-            <KeyRound className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs border border-slate-200 bg-slate-950 flex items-center justify-center shrink-0">
+            <img 
+              src="https://krorent.in/wp-content/uploads/2026/08/RUGESPORTS.jpeg" 
+              alt="RUG ESPORTS" 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
             <h3 className="font-bold text-base text-slate-900 font-['Rajdhani']">ADMIN ACCESS</h3>
-            <p className="text-[10px] text-slate-500 font-medium">RAG | ESPORTS Master Panel</p>
+            <p className="text-[10px] text-orange-600 font-bold">RUG | ESPORTS Master Panel</p>
           </div>
         </div>
 
@@ -77,14 +82,14 @@ export const AdminUnlockModal: React.FC<AdminUnlockModalProps> = ({
             <input
               id="admin-pin-input"
               type="password"
-              placeholder="e.g. 7788"
+              placeholder="e.g. Password###"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 rounded-xl px-3 py-2.5 text-center text-lg tracking-widest text-slate-900 font-mono outline-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 rounded-xl px-3 py-2.5 text-center text-sm tracking-wider text-slate-900 font-mono outline-none"
               autoFocus
               required
             />
-            <p className="text-[10px] text-slate-500 text-center mt-1">Default PIN: 7788 (Editable in settings)</p>
+            <p className="text-[10px] text-slate-500 text-center mt-1">Hint: Password###</p>
           </div>
 
           <button
