@@ -1,55 +1,51 @@
-import React, { useState, useRef } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { Wallet, Bell, Plus, Volume2, ShieldCheck, Swords, Diamond } from 'lucide-react';
-import { PaymentSettings } from '../types';
+import React, { useRef } from 'react';
+import { User, Wallet, Bell, Sparkles } from 'lucide-react';
+import { UserProfile, PublicSettings } from '../types';
 
 interface HeaderProps {
+  user: UserProfile | null;
+  publicSettings: PublicSettings;
   onOpenWallet: () => void;
-  onOpenAddMoney: () => void;
-  onOpenNotifications?: () => void;
-  publicSettings?: Omit<PaymentSettings, 'adminSecretPin'> | null;
-  onTriggerAdminPrompt: () => void;
+  onOpenNotifications: () => void;
+  onOpenAuth: () => void;
+  onOpenAdminSecret: () => void;
+  unreadNotificationsCount?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  onOpenWallet,
-  onOpenAddMoney,
-  onOpenNotifications,
+  user,
   publicSettings,
-  onTriggerAdminPrompt,
+  onOpenWallet,
+  onOpenNotifications,
+  onOpenAuth,
+  onOpenAdminSecret,
+  unreadNotificationsCount = 0,
 }) => {
-  const { user, openAuthModal } = useAuth();
-  const [logoClickCount, setLogoClickCount] = useState(0);
+  // Secret admin unlock: 3 fast taps on the brand logo
+  const clickCountRef = useRef<number>(0);
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Secret admin unlock gesture: 3 rapid clicks within 1.2 seconds
   const handleSecretLogoClick = () => {
-    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    clickCountRef.current += 1;
 
-    const nextCount = logoClickCount + 1;
-    if (nextCount >= 3) {
-      setLogoClickCount(0);
-      onTriggerAdminPrompt();
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+    }
+
+    if (clickCountRef.current >= 3) {
+      clickCountRef.current = 0;
+      onOpenAdminSecret();
     } else {
-      setLogoClickCount(nextCount);
       clickTimerRef.current = setTimeout(() => {
-        setLogoClickCount(0);
-      }, 1200);
+        clickCountRef.current = 0;
+      }, 700);
     }
   };
 
-  return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-100 shadow-sm">
-      {/* Top Banner Announcement if active */}
-      {publicSettings?.announcementActive && publicSettings.announcementText && (
-        <div className="bg-indigo-600 text-white py-1 px-3.5 text-xs font-bold flex items-center gap-2 overflow-hidden shadow-inner">
-          <Volume2 className="w-3.5 h-3.5 shrink-0 text-amber-300 animate-pulse" />
-          <div className="whitespace-nowrap overflow-hidden text-ellipsis flex-1 tracking-wide text-[11px]">
-            {publicSettings.announcementText}
-          </div>
-        </div>
-      )}
+  const formattedBalance = user ? user.walletBalance.toLocaleString('en-IN') : '0';
 
+  return (
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs transition-all duration-200">
       {/* Main Header Row */}
       <div className="max-w-md mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
         {/* RUG ESPORTS Brand Logo (Freely displayed image, Secret Admin Trigger on 3 taps) */}
@@ -66,72 +62,65 @@ export const Header: React.FC<HeaderProps> = ({
             referrerPolicy="no-referrer"
           />
         </div>
-              <span className="font-black text-lg text-slate-900 tracking-wider font-['Chakra_Petch'] leading-none">
-                RUG <span className="text-orange-600">|</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 font-extrabold">ESPORTS</span>
-              </span>
-            </div>
-            <span className="text-[10px] text-orange-600 block font-bold tracking-tight leading-none mt-0.5">
-              rugesports.in
-            </span>
-          </div>
-        </div>
 
         {/* Right side: Wallet + Notifications */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           {user ? (
-            <div className="flex items-center gap-2">
-              {/* Wallet Pill Button matching reference */}
-              <div
-                id="header-wallet-pill-btn"
+            <>
+              {/* Wallet Pill Button */}
+              <button
+                id="header-wallet-btn"
                 onClick={onOpenWallet}
-                className="flex items-center bg-slate-100 hover:bg-slate-200/80 border border-slate-200 rounded-lg py-1 pl-2.5 pr-1 transition cursor-pointer shadow-xs active:scale-95 gap-2"
+                className="group relative flex items-center gap-2 pl-2.5 pr-3.5 py-1.5 rounded-full bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/20 hover:shadow-orange-500/35 hover:scale-[1.02] active:scale-[0.98] transition"
               >
-                <div className="flex items-center gap-1 text-indigo-600">
-                  <Wallet className="w-3.5 h-3.5" />
-                  <span className="text-xs font-black text-slate-900 font-['Rajdhani']">
-                    ₹{user.walletBalance.toFixed(2)}
-                  </span>
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+                  <Wallet className="w-3 h-3 text-white" />
                 </div>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpenAddMoney();
-                  }}
-                  className="w-5 h-5 rounded-md bg-indigo-600 hover:bg-indigo-700 flex items-center justify-center text-white transition shadow-xs"
-                  title="Add Money"
-                >
-                  <Plus className="w-3 h-3 stroke-[3]" />
-                </button>
-              </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[11px] font-medium text-orange-100">₹</span>
+                  <span className="text-xs font-bold tracking-tight">{formattedBalance}</span>
+                </div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              </button>
 
               {/* Notification Bell */}
               <button
-                type="button"
                 id="header-notification-btn"
-                onClick={() => onOpenNotifications && onOpenNotifications()}
-                className="relative w-8 h-8 rounded-lg text-slate-700 hover:bg-slate-100 flex items-center justify-center transition border border-slate-200"
+                onClick={onOpenNotifications}
+                className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 transition"
                 title="Notifications"
               >
-                <Bell className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white" />
+                <Bell className="w-5 h-5" />
+                {unreadNotificationsCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white animate-pulse" />
+                )}
               </button>
-            </div>
+            </>
           ) : (
-            <div className="flex items-center gap-2">
+            <>
+              {/* Sign In CTA */}
               <button
                 id="header-login-btn"
-                onClick={() => openAuthModal('login')}
-                className="py-1.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-lg transition shadow-md active:scale-95 uppercase tracking-wider"
+                onClick={onOpenAuth}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold shadow-md shadow-orange-500/20 active:scale-95 transition"
               >
-                Sign In
+                <User className="w-3.5 h-3.5" />
+                <span>Sign In</span>
               </button>
-            </div>
+            </>
           )}
         </div>
       </div>
+
+      {/* Ticker for System Announcements if enabled */}
+      {publicSettings.systemAnnouncement && (
+        <div className="bg-orange-50 border-t border-orange-100 px-4 py-1.5 text-[11px] text-orange-800 flex items-center justify-between overflow-hidden">
+          <div className="flex items-center gap-2 truncate">
+            <Sparkles className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+            <span className="truncate font-medium">{publicSettings.systemAnnouncement}</span>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
-
-
