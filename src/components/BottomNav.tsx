@@ -5,15 +5,22 @@ export type NavTab = 'tournaments' | 'my_matches' | 'wallet' | 'profile';
 
 interface BottomNavProps {
   activeTab: NavTab;
-  onTabChange: (tab: NavTab) => void;
+  onTabChange?: (tab: NavTab) => void;
+  onChangeTab?: (tab: NavTab) => void;
   joinedCount?: number;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onTabChange,
+  onChangeTab,
   joinedCount = 0,
 }) => {
+  const handleTabClick = (tab: NavTab) => {
+    if (onTabChange) onTabChange(tab);
+    if (onChangeTab) onChangeTab(tab);
+  };
+
   const tabs = [
     {
       id: 'tournaments' as NavTab,
@@ -39,7 +46,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200/80 shadow-lg max-w-md mx-auto pb-safe">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200/80 shadow-2xl max-w-md mx-auto pb-safe">
       <div className="grid grid-cols-4 h-16 items-center px-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -49,8 +56,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
             <button
               key={tab.id}
               id={`nav-tab-${tab.id}`}
-              onClick={() => onTabChange(tab.id)}
-              className={`flex flex-col items-center justify-center relative py-1 transition-all ${
+              onClick={() => handleTabClick(tab.id)}
+              type="button"
+              className={`flex flex-col items-center justify-center relative py-1 transition-all cursor-pointer select-none active:scale-95 ${
                 isActive
                   ? 'text-indigo-600 font-bold'
                   : 'text-slate-500 hover:text-slate-800'
