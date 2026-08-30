@@ -52,20 +52,20 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Main Header Row */}
       <div className="max-w-md mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
-        {/* RUG | ESPORTS Brand Logo (Secret Admin Trigger on 3 taps) */}
+        {/* RUG ESPORTS Brand Logo (Freely displayed image, Secret Admin Trigger on 3 taps) */}
         <div 
           id="brand-logo-trigger"
           onClick={handleSecretLogoClick}
-          className="flex items-center gap-2.5 cursor-pointer select-none group"
-          title="RUG | ESPORTS (Admin: 3 taps)"
+          className="flex items-center cursor-pointer select-none group active:scale-95 transition"
+          title="RUG ESPORTS (Admin: 3 taps)"
         >
-          <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-red-600 p-0.5 flex items-center justify-center shadow-md shadow-orange-500/20 group-active:scale-95 transition">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <Swords className="w-4 h-4 text-amber-400" />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
+          <img 
+            src="https://krorent.in/wp-content/uploads/2026/08/RUGESPORTS.jpeg" 
+            alt="RUG ESPORTS" 
+            className="h-10 sm:h-11 w-auto object-contain"
+            referrerPolicy="no-referrer"
+          />
+        </div>
               <span className="font-black text-lg text-slate-900 tracking-wider font-['Chakra_Petch'] leading-none">
                 RUG <span className="text-orange-600">|</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 font-extrabold">ESPORTS</span>
               </span>
