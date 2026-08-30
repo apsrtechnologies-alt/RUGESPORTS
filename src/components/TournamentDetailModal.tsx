@@ -78,6 +78,7 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
 
   const handleProceedToJoin = () => {
     if (!user) {
+      onClose();
       openAuthModal('login');
       return;
     }
@@ -89,6 +90,7 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
     if (e) e.preventDefault();
 
     if (!user) {
+      onClose();
       openAuthModal('login');
       return;
     }
@@ -719,7 +721,10 @@ export const TournamentDetailModal: React.FC<TournamentDetailModalProps> = ({
             {!user ? (
               <button
                 id="modal-login-btn"
-                onClick={() => openAuthModal('login')}
+                onClick={() => {
+                  onClose();
+                  openAuthModal('login');
+                }}
                 className="w-full py-3 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white font-bold rounded-xl text-sm transition shadow-lg shadow-orange-500/20 active:scale-98"
               >
                 Sign In to Join Match (₹{tournament.entryFee})
